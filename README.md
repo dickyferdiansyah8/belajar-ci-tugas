@@ -1,89 +1,152 @@
-# Toko Online CodeIgniter 4
+# 🛒 Toko Online – CodeIgniter 4
 
-Proyek ini adalah platform toko online yang dibangun menggunakan [CodeIgniter 4](https://codeigniter.com/). Sistem ini menyediakan beberapa fungsionalitas untuk toko online, termasuk manajemen produk, keranjang belanja, dan sistem transaksi.
+Ini adalah aplikasi web toko online sederhana yang dibuat menggunakan framework **CodeIgniter 4** dan tema admin **NiceAdmin**. Fitur utamanya mencakup manajemen produk, keranjang belanja, transaksi, diskon dinamis, serta integrasi API ongkir (RajaOngkir via Komerce).
 
-## Daftar Isi
+---
 
-- [Fitur](#fitur)
-- [Persyaratan Sistem](#persyaratan-sistem)
-- [Instalasi](#instalasi)
-- [Struktur Proyek](#struktur-proyek)
+## 📌 Fitur Utama
 
-## Fitur
+### 🎨 Katalog Produk
+- Daftar produk lengkap dengan gambar, nama, harga, dan diskon.
+- Harga otomatis terpengaruh diskon jika sedang aktif.
+- UI responsif & menarik menggunakan template **NiceAdmin**.
 
-- Katalog Produk
-  - Tampilan produk dengan gambar
-  - Pencarian produk
-- Keranjang Belanja
-  - Tambah/hapus produk
-  - Update jumlah produk
-- Sistem Transaksi
-  - Proses checkout
-  - Riwayat transaksi
-- Panel Admin
-  - Manajemen produk (CRUD)
-  - Manajemen kategori
-  - Laporan transaksi
-  - Export data ke PDF
-- Sistem Autentikasi
-  - Login/Register pengguna
-  - Manajemen akun
-- UI Responsif dengan NiceAdmin template
+### 🛒 Keranjang Belanja
+- Tambah produk dari halaman utama.
+- Ubah jumlah item, hapus produk, atau kosongkan semua isi keranjang.
+- Data keranjang disimpan di **session** menggunakan library helper `Cart`.
 
-## Persyaratan Sistem
+### 💳 Checkout & Transaksi
+- Checkout menampilkan detail belanja + ongkir.
+- Perhitungan ongkir menggunakan **API Komerce (RajaOngkir)**.
+- Simpan riwayat transaksi per user.
+- Lihat detail pembelian di halaman profil.
 
-- PHP >= 8.2
-- Composer
-- Web server (XAMPP)
+### 🔖 Diskon Produk
+- Admin bisa mengaktifkan diskon potongan harga (CRUD).
+- Diskon disimpan di session dan otomatis dihitung pada total belanja.
 
-## Instalasi
+### 🔐 Autentikasi
+- Sistem login multi-user dengan session.
+- Role: `admin` dan `user`.
+- Halaman tertentu hanya bisa diakses jika login (via middleware filter).
 
-1. **Clone repository ini**
+### ⚙️ Panel Admin
+- CRUD produk (termasuk upload gambar).
+- Kelola diskon harian.
+- Export data produk ke PDF menggunakan **Dompdf**.
+
+### 🌐 API & Ongkir
+- Endpoint `GET /api` untuk mengambil semua transaksi + total item.
+- Autentikasi sederhana via header: `Key: YOUR_API_KEY`.
+- Ongkir dari provinsi/kota dihitung realtime via API.
+
+---
+
+## 🧰 Persyaratan Sistem
+
+| Komponen     | Versi Minimum |
+|--------------|----------------|
+| PHP          | 8.2            |
+| MySQL/MariaDB| 5.7+           |
+| Composer     | Terbaru        |
+
+### Ekstensi PHP wajib:
+- `intl` (untuk `number_to_currency()`)
+- `curl` (API HTTP client)
+- `fileinfo` (upload gambar)
+
+---
+
+## ⚙️ Langkah Instalasi
+
+1. **Clone proyek ini**
    ```bash
-   git clone [URL repository]
-   cd belajar-ci-tugas
-   ```
-2. **Install dependensi**
-   ```bash
-   composer install
-   ```
-3. **Konfigurasi database**
+   git clone https://github.com/username/toko-ci4.git
+   cd toko-ci4
+Install dependensi
 
-   - Start module Apache dan MySQL pada XAMPP
-   - Buat database **db_ci4** di phpmyadmin.
-   - copy file .env dari tutorial https://www.notion.so/april-ns/Codeigniter4-Migration-dan-Seeding-045ffe5f44904e5c88633b2deae724d2
+bash
+Salin
+Edit
+composer install
+Buat database
 
-4. **Jalankan migrasi database**
-   ```bash
-   php spark migrate
-   ```
-5. **Seeder data**
-   ```bash
-   php spark db:seed ProductSeeder
-   ```
-   ```bash
-   php spark db:seed UserSeeder
-   ```
-6. **Jalankan server**
-   ```bash
-   php spark serve
-   ```
-7. **Akses aplikasi**
-   Buka browser dan akses `http://localhost:8080` untuk melihat aplikasi.
+Buka phpMyAdmin, buat database baru misalnya: db_ci4.
 
-## Struktur Proyek
+Konfigurasi .env
 
-Proyek menggunakan struktur MVC CodeIgniter 4:
+Duplikat .env.example jadi .env.
 
-- app/Controllers - Logika aplikasi dan penanganan request
-  - AuthController.php - Autentikasi pengguna
-  - ProdukController.php - Manajemen produk
-  - TransaksiController.php - Proses transaksi
-- app/Models - Model untuk interaksi database
-  - ProductModel.php - Model produk
-  - UserModel.php - Model pengguna
-- app/Views - Template dan komponen UI
-  - v_produk.php - Tampilan produk
-  - v_keranjang.php - Halaman keranjang
-- public/img - Gambar produk dan aset
-- public/NiceAdmin - Template admin
+Isi konfigurasi database:
+
+pgsql
+Salin
+Edit
+database.default.hostname = localhost
+database.default.database = db_ci4
+database.default.username = root
+database.default.password =
+Tambahkan juga API_KEY=yourapikeyhere
+
+Migrasi tabel
+
+bash
+Salin
+Edit
+php spark migrate
+Isi data awal (seeder)
+
+bash
+Salin
+Edit
+php spark db:seed ProductSeeder
+php spark db:seed UserSeeder
+Jalankan server
+
+bash
+Salin
+Edit
+php spark serve
+Buka http://localhost:8080 di browser.
+
+## 📁 Struktur Proyek
+
+```text
+├── app/
+│   ├── Config/
+│   │   └── Routes.php
+│   ├── Controllers/
+│   │   ├── ApiController.php
+│   │   ├── AuthController.php
+│   │   ├── DiskonController.php
+│   │   ├── Home.php
+│   │   ├── ProdukController.php
+│   │   └── TransaksiController.php
+│   ├── Filters/
+│   │   ├── Auth.php
+│   │   └── Redirect.php
+│   ├── Models/
+│   │   ├── ProductModel.php
+│   │   ├── TransactionDetailModel.php
+│   │   ├── TransactionModel.php
+│   │   └── UserModel.php
+│   └── Views/
+│       ├── layout.php
+│       ├── v_checkout.php
+│       ├── v_diskon.php
+│       ├── v_keranjang.php
+│       ├── v_login.php
+│       ├── v_produk.php
+│       ├── v_produkPDF.php
+│       └── v_profile.php
+├── public/
+│   ├── index.php
+│   ├── assets/
+│   │   └── NiceAdmin/ ← folder template admin (CSS, JS)
+│   └── img/ ← folder untuk upload foto produk & profil user
+├── writable/
+│   ├── logs/
+│   └── session/
+└── .env
+```
